@@ -20,26 +20,22 @@ def check_site(url):
         
         if r.status_code == 200:
             if elapsed <= max_time:
-                print(f"✅ {url} - {r.status_code} - {elapsed:.2f}ms")
-                return True
+                return f"✅ **Online**: {url}\nTempo: {elapsed:.2f}ms"
             else:
-                message = f"⚠️ **Site lento**: {url}\nTempo de resposta: {elapsed:.2f}ms (limite: {max_time}ms)"
-                print(message)
-                send_discord_alert(message)
-                return False
+                return f"⚠️ **Site lento**: {url}\nTempo: {elapsed:.2f}ms (limite: {max_time}ms)"
         else:
-            message = f"❌ **Site offline**: {url}\nStatus code: {r.status_code}"
-            print(message)
-            send_discord_alert(message)
-            return False
+            return f"❌ **Offline**: {url}\nStatus: {r.status_code}"
             
     except requests.exceptions.RequestException as e:
-        message = f"❌ **Erro ao acessar**: {url}\nErro: {str(e)}"
-        print(message)
-        send_discord_alert(message)
-        return False
+        return f"❌ **Erro**: {url}\nMotivo: {str(e)}"
 
 if __name__ == "__main__":
     results = [check_site(url.strip()) for url in sites]
-    if not all(results):
-        exit(1)  # Falha se algum site estiver offline ou lento
+    status_report = "\n\n".join(results)
+    
+    # Envia relatório completo para o Discord
+    send_discord_alert(f"**Relatório de Monitoramento**\n\n{status_report}")
+    
+    # Falha se algum site estiver offline ou lento
+    if any("❌" in result or "⚠️" in result for result in results):
+        exit(1)
