@@ -1,4 +1,4 @@
-name: Site Monitor with Google Chat Alerts
+name: Site Monitor
 
 on:
   schedule:
