@@ -27,7 +27,7 @@ jobs:
         id: monitor
         run: python monitor.py
         env:
-          SITES: 'https://www.chili.com.bf,https://chili.pa/,https://chili.com.mx'  # 🔹 Sem espaços após vírgulas!
+          SITES: 'https://www.chili.com.br,https://chili.pa/,https://chili.com.mx'  # 🔹 Sem espaços após vírgulas!
           MAX_RESPONSE_TIME: '2000'
           GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}  # 🔹 Nome correto da variável
 
