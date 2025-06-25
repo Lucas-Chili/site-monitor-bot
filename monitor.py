@@ -18,20 +18,21 @@ REQUEST_HEADERS = {
     'Connection': 'keep-alive'
 }
 
-def send_discord_alert(message):
-    """Envia notificação para o Discord"""
-    if webhook_url:
-        try:
-            webhook = DiscordWebhook(
-                url=webhook_url, 
-                content=message,
-                rate_limit_retry=True
-            )
-            response = webhook.execute()
-            if not response.ok:
-                print(f"Erro ao enviar para Discord: {response.status_code}")
-        except Exception as e:
-            print(f"Falha ao enviar para Discord: {str(e)}")
+import json
+
+def send_google_chat_alert(message):
+    webhook_url = os.getenv('GOOGLE_CHAT_WEBHOOK_URL')  # Adicione esta variável no GitHub Secrets
+    if not webhook_url:
+        return
+        
+    payload = {
+        "text": f"⚠️ **Monitor de Sites**\n\n{message}"
+    }
+    requests.post(
+        webhook_url,
+        data=json.dumps(payload),
+        headers={'Content-Type': 'application/json'}
+    )
 
 def add_monitoring_params(url):
     """Adiciona parâmetros para evitar tracking"""
