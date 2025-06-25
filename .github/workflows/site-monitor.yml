@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3  # Versão atualizada
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v4  # Versão atualizada
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
@@ -25,23 +25,34 @@ jobs:
 
       - name: Run monitor script
         id: monitor
-        run: python monitor.py
+        run: |
+          python -c "
+          import os, requests, json, time
+
+          sites = [url.strip() for url in os.getenv('SITES', '').split(',') if url.strip()]
+          webhook_url = os.getenv('GOOGLE_CHAT_WEBHOOK_URL')
+          offline_sites = []
+
+          for url in sites:
+              try:
+                  start = time.time()
+                  r = requests.get(url, timeout=10)
+                  if r.status_code != 200:
+                      offline_sites.append(f'❌ {url} (Status: {r.status_code})')
+              except Exception as e:
+                  offline_sites.append(f'❌ {url} (Erro: {str(e)})')
+
+          if offline_sites:
+              message = '🚨 **Sites Offline**\n\n' + '\n'.join(offline_sites)
+              requests.post(webhook_url, json={'text': message})
+              exit(1)  # Falha o workflow para acionar a notificação
+          "
         env:
-          SITES: 'https://www.chili.com.br,https://chili.pa/,https://chili.com.mx'  # 🔹 Sem espaços após vírgulas!
+          SITES: 'https://www.chili.com.bf,https://chili.pa/,https://chili.com.mx'
           MAX_RESPONSE_TIME: '2000'
-          GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}  # 🔹 Nome correto da variável
+          GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
 
       - name: Notify Google Chat on failure
         if: failure() && steps.monitor.outcome == 'failure'
         run: |
-          python -c "
-          import os, requests, json
-          webhook = os.getenv('GOOGLE_CHAT_WEBHOOK_URL')
-          if webhook:
-            requests.post(
-              webhook,
-              json={'text': '⚠️ O monitor de sites detectou problemas!\n\n🔗 Acesse o workflow: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'}
-            )
-          "
-        env:
-          GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+          echo "Notificação já enviada pelo script Python"
