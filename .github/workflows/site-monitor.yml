@@ -9,32 +9,32 @@ on:
 jobs:
   monitor:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.9'
-        
-   - name: Install dependencies
-  run: |
-    python -m pip install --upgrade pip
-    pip install requests
-        
-    - name: Run monitor script
-      id: monitor
-      run: python monitor.py
-      env:
-        SITES: 'https://www.chili.com.bf, https://chili.pa/, https://chili.com.mx/' # 🔹 Altere para seus sites!
-        MAX_RESPONSE_TIME: '2000'  # Tempo máximo em milissegundos
-        DISCORD_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
-        
-    - name: Notify Google Chat on failure
-  if: failure() && steps.monitor.outcome == 'failure'
-  uses: actions-hub/gchat@master
-  with:
-    url: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
-    message: '⚠️ O monitor de sites detectou problemas! Verifique o workflow em: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: Run monitor script
+        id: monitor
+        run: python monitor.py
+        env:
+          SITES: 'https://www.chili.com.bf, https://chili.pa/, https://chili.com.mx/' # 🔹 Altere para seus sites!
+          MAX_RESPONSE_TIME: '2000'
+          DISCORD_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+
+      - name: Notify Google Chat on failure
+        if: failure() && steps.monitor.outcome == 'failure'
+        uses: actions-hub/gchat@master
+        with:
+          url: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+          message: '⚠️ O monitor de sites detectou problemas! Verifique o workflow em: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
