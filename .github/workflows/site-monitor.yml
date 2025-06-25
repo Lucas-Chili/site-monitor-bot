@@ -28,7 +28,7 @@ jobs:
       id: monitor
       run: python monitor.py
       env:
-        SITES: 'https://www.chili.com.bf' 'https://chili.pa/' 'https://chili.com.mx/' # 🔹 Altere para seus sites!
+        SITES: 'https://www.chili.com.bf, https://chili.pa/, https://chili.com.mx/' # 🔹 Altere para seus sites!
         MAX_RESPONSE_TIME: '2000'  # Tempo máximo em milissegundos
         DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
         
