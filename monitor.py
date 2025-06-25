@@ -7,7 +7,7 @@ from discord_webhook import DiscordWebhook
 # Configurações
 sites = os.getenv('SITES', 'https://example.com').split(',')
 max_time = int(os.getenv('MAX_RESPONSE_TIME', 2000))  # ms
-webhook_url = os.getenv('DISCORD_WEBHOOK_URL')
+webhook_url = os.getenv('GOOGLE_CHAT_WEBHOOK_URL')
 bot_identifier = 'SiteMonitorBot/1.0 (+https://github.com/your-repo)'
 
 # Headers para evitar tracking e identificar como bot
