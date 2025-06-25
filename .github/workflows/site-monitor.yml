@@ -2,8 +2,7 @@ name: Site Monitor
 
 on:
   schedule:
-    # Executa a cada 30 minutos
-    - cron: '*/30 * * * *'
+    - cron: '*/30 * * * *'  # Executa a cada 30 minutos
   workflow_dispatch:
 
 jobs:
@@ -12,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3  # Versão atualizada
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4  # Versão atualizada
         with:
           python-version: '3.9'
 
@@ -28,13 +27,21 @@ jobs:
         id: monitor
         run: python monitor.py
         env:
-          SITES: 'https://www.chili.com.bf, https://chili.pa/, https://chili.com.mx/' # 🔹 Altere para seus sites!
+          SITES: 'https://www.chili.com.bf,https://chili.pa/,https://chili.com.mx'  # 🔹 Sem espaços após vírgulas!
           MAX_RESPONSE_TIME: '2000'
-          DISCORD_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+          GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}  # 🔹 Nome correto da variável
 
       - name: Notify Google Chat on failure
         if: failure() && steps.monitor.outcome == 'failure'
-        uses: actions-hub/gchat@master
-        with:
-          url: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
-          message: '⚠️ O monitor de sites detectou problemas! Verifique o workflow em: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+        run: |
+          python -c "
+          import os, requests, json
+          webhook = os.getenv('GOOGLE_CHAT_WEBHOOK_URL')
+          if webhook:
+            requests.post(
+              webhook,
+              json={'text': '⚠️ O monitor de sites detectou problemas!\n\n🔗 Acesse o workflow: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}'}
+            )
+          "
+        env:
+          GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
