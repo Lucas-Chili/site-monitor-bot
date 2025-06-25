@@ -48,7 +48,7 @@ jobs:
               exit(1)  # Falha o workflow para acionar a notificação
           "
         env:
-          SITES: 'https://www.chili.com.bf,https://chili.pa/,https://chili.com.mx'
+          SITES: 'https://www.chili.com.br,https://chili.pa/,https://chili.com.mx'
           MAX_RESPONSE_TIME: '2000'
           GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
 
