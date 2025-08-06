@@ -48,7 +48,7 @@ jobs:
               exit(1)  # Falha o workflow para acionar a notificação
           "
         env:
-          SITES: 'https://www.chili.com.br,https://chili.pa/,https://chili.com.mx ,https://eseg.edu.br/ ,https://www.daikin.com.br/ ,https://nuageit.com.br/ ,https://ultracar.com.br/ ,https://castorcenter.com.br/ ,https://www.joico.com.br/ ,https://www.sgatoyota.com.br/ ,https://loja.steck.com.br/ ,https://br.hubspot.com/ ,https://www.lojanetlab.com.br/ ,https://rodelag.com/,https://bongomascots.com/ ,https://multinationalpr.com/ ,https://www.mapei.com/mx/es-mx/home ,https://www.kia.com.pa/ ,https://www.dataart.com/ ,https://onfly.mx/ ,https://www.onboard.mx/ ,https://sculptorclinic.com/ ,https://www.aruma.mx/'
+          SITES: 'https://www.chili.com.br,https://chili.pa/,https://chili.com.mx ,https://eseg.edu.br/ ,https://www.daikin.com.br/ ,https://ultracar.com.br/ ,https://castorcenter.com.br/ ,https://www.joico.com.br/ ,https://www.sgatoyota.com.br/ ,https://loja.steck.com.br/ ,https://br.hubspot.com/ ,https://www.lojanetlab.com.br/ ,https://rodelag.com/,https://bongomascots.com/ ,https://multinationalpr.com/ ,https://www.mapei.com/mx/es-mx/home ,https://www.kia.com.pa/ ,https://www.dataart.com/ ,https://onfly.mx/ ,https://www.onboard.mx/ ,https://sculptorclinic.com/ ,https://www.aruma.mx/'
           MAX_RESPONSE_TIME: '2000'
           GOOGLE_CHAT_WEBHOOK_URL: ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
 
